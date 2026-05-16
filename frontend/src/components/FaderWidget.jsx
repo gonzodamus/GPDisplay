@@ -34,14 +34,6 @@ export default function FaderWidget({ value, label, color }) {
       </div>
 
       {label && <div style={styles.faderLabel}>{label}</div>}
-
-      {label && (
-        <div style={styles.tapeWrap}>
-          <div style={styles.tape}>
-            <span style={styles.tapeText}>{label}</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -52,12 +44,14 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     height: '100%',
-    paddingTop: '16px',
+    paddingTop: '48px',
+    justifyContent: 'flex-start',
   },
   trackArea: {
     position: 'relative',
-    flex: 1,
     width: '60px',
+    height: '220px',
+    flexShrink: 0,
   },
   track: {
     position: 'absolute',
@@ -99,25 +93,5 @@ const styles = {
     marginTop: '10px',
     marginBottom: '6px',
     textTransform: 'uppercase',
-  },
-  tapeWrap: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  tape: {
-    backgroundColor: '#c8b870',
-    padding: '4px 18px 4px 10px',
-    clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%)',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
-    minWidth: '70px',
-    textAlign: 'center',
-  },
-  tapeText: {
-    fontFamily: "'Patrick Hand', cursive",
-    fontSize: '0.95rem',
-    color: '#1a1a1a',
-    letterSpacing: '0.02em',
-    whiteSpace: 'nowrap',
   },
 };
