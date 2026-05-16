@@ -1,8 +1,8 @@
-export default function TextWidget({ value, label, fontSize = '1.5rem' }) {
+export default function TextWidget({ value, label, fontSize = '2rem' }) {
   const displayValue = value === undefined || value === null ? '—' : value;
 
-  // Large font sizes → song/rackspace name display (dark box)
-  const isNameDisplay = parseFloat(fontSize) >= 2;
+  // fontSize >= 1.5rem → dark box display (song title, setlist name)
+  const isNameDisplay = parseFloat(fontSize) >= 1.5;
 
   if (isNameDisplay) {
     return (
@@ -14,14 +14,11 @@ export default function TextWidget({ value, label, fontSize = '1.5rem' }) {
     );
   }
 
-  // Smaller → tape banner label
+  // Smaller → tape banner label (instrument names under faders)
   return (
     <div style={styles.tapeOuter}>
-      {label && <div style={styles.tapeSmallLabel}>{label}</div>}
-      <div style={styles.tapeWrap}>
-        <div style={styles.tape}>
-          <span style={styles.tapeText}>{displayValue}</span>
-        </div>
+      <div style={styles.tape}>
+        <span style={styles.tapeText}>{displayValue}</span>
       </div>
     </div>
   );
@@ -32,13 +29,12 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    height: '100%',
-    padding: '16px 20px',
+    padding: '10px 20px',
   },
   nameBox: {
     background: '#2a2a2a',
     borderRadius: '8px',
-    border: '1px solid rgba(255,255,255,0.08)',
+    border: '1px solid rgba(200,200,200,0.3)',
     boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
     padding: '10px 24px',
     maxWidth: '100%',
@@ -52,34 +48,21 @@ const styles = {
     textOverflow: 'ellipsis',
     letterSpacing: '-0.01em',
   },
-
   tapeOuter: {
     display: 'flex',
-    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'flex-start',
-    height: '100%',
+    alignItems: 'center',
     padding: '0 12px',
-    gap: '4px',
-  },
-  tapeSmallLabel: {
-    fontSize: '0.65rem',
-    color: 'rgba(255,255,255,0.4)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.1em',
-  },
-  tapeWrap: {
-    display: 'flex',
   },
   tape: {
-    backgroundColor: '#c8b870',
-    padding: '4px 18px 4px 10px',
-    clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%)',
+    backgroundColor: '#ede3c2',
+    padding: '5px 16px',
+    borderRadius: '3px',
     boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
   },
   tapeText: {
     fontFamily: "'Patrick Hand', cursive",
-    fontSize: '1rem',
+    fontSize: '2.2rem',
     color: '#1a1a1a',
     letterSpacing: '0.02em',
     whiteSpace: 'nowrap',

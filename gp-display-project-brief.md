@@ -143,7 +143,6 @@ A JSON file (`display-config.json`) at the project root that defines what the di
         "direction": "column",
         "items": [
           { "type": "text", "oscAddress": "/RackspaceName", "label": "Rackspace", "fontSize": "2rem" },
-          { "type": "text", "oscAddress": "/VariationName", "label": "Variation", "fontSize": "1.5rem" }
         ]
       },
       {
@@ -161,7 +160,7 @@ A JSON file (`display-config.json`) at the project root that defines what the di
         "direction": "column",
         "items": [
           { "type": "text", "oscAddress": "/SetBPM", "label": "BPM", "fontSize": "2.5rem" },
-          { "type": "text", "oscAddress": "/SetGlobalTranspose", "label": "Transpose", "fontSize": "1.5rem" }
+          { "type": "text", "oscAddress": "/SetGlobalTranspose", "label": "Transpose", "fontSize": "2rem" }
         ]
       }
     ]

@@ -30,6 +30,7 @@ export default function App() {
       >
         {columns.map((col, colIdx) => {
           const direction = col.direction || 'row'
+          const hasFader = col.items.some(item => item.type === 'fader')
           return (
             <div
               key={colIdx}
@@ -39,6 +40,9 @@ export default function App() {
                 flexDirection: direction,
                 flexWrap: direction === 'row' ? 'wrap' : 'nowrap',
                 alignItems: direction === 'column' ? 'stretch' : 'center',
+                justifyContent: hasFader ? 'center' : 'flex-start',
+                paddingTop: col.paddingTop || 0,
+                paddingLeft: col.paddingLeft || 0,
               }}
             >
               {col.items.map((item, itemIdx) => (
@@ -46,9 +50,7 @@ export default function App() {
                   key={itemIdx}
                   style={{
                     ...styles.itemWrapper,
-                    flex: direction === 'row' ? '1 1 0'
-                        : item.type === 'fader' ? '1 1 0'
-                        : '0 0 auto',
+                    flex: direction === 'row' ? '1 1 0' : '0 0 auto',
                   }}
                 >
                   <WidgetContainer item={item} oscState={oscState} />

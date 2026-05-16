@@ -116,7 +116,7 @@ osc.on('*', (message) => {
   });
   oscCache.set(message.address, payload);
   persistCache(oscCache);
-  console.log(`OSC received: ${message.address}`);
+  console.log(`OSC received: ${message.address}`, message.args);
   const count = broadcast(payload);
   console.log(`Broadcast to ${count} WS client(s)`);
 });

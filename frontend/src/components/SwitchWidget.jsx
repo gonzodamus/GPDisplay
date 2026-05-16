@@ -33,7 +33,7 @@ const styles = {
     gap: '8px',
   },
   groupLabel: {
-    fontSize: '0.68rem',
+    fontSize: '2rem',
     color: 'rgba(255,255,255,0.5)',
     textTransform: 'uppercase',
     letterSpacing: '0.08em',
