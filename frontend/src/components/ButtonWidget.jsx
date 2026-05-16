@@ -46,8 +46,8 @@ const styles = {
     letterSpacing: '0.04em',
   },
   button: {
-    width: '64px',
-    height: '64px',
+    width: '100px',
+    height: '100px',
     borderRadius: '8px',
     cursor: 'default',
     transition: 'box-shadow 120ms ease',

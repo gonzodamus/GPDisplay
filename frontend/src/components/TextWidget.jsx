@@ -34,7 +34,10 @@ const styles = {
   nameBox: {
     background: '#2a2a2a',
     borderRadius: '8px',
-    border: '1px solid rgba(200,200,200,0.3)',
+    borderTop: '5px solid rgba(200,200,200,0.5)',
+    borderLeft: '5px solid rgba(200,200,200,0.5)',
+    borderRight: '2px solid rgba(200,200,200,0.5)',
+    borderBottom: '2px solid rgba(200,200,200,0.5)',
     boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
     padding: '10px 24px',
     maxWidth: '100%',
