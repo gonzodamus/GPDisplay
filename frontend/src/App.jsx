@@ -68,7 +68,7 @@ const styles = {
     width: '1920px',
     height: '480px',
     overflow: 'hidden',
-    background: 'var(--gp-bg)',
+
   },
   loading: {
     display: 'flex',
