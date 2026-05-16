@@ -1,6 +1,6 @@
 const KNOB_H = 48;
 
-export default function FaderWidget({ value, label, color }) {
+export default function FaderWidget({ value, color }) {
   const isUndefined = value === undefined || value === null;
   const clamped = isUndefined ? 0 : Math.min(1, Math.max(0, value));
 

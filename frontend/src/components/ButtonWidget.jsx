@@ -1,4 +1,4 @@
-export default function ButtonWidget({ value, label, note, color }) {
+export default function ButtonWidget({ value, note, color }) {
   const isOn = value !== undefined && value !== null && value >= 0.5;
   const litColor = color || '#cc2222';
 
@@ -38,12 +38,6 @@ const styles = {
     justifyContent: 'center',
     padding: '12px 16px',
     gap: '28px',
-  },
-  valueText: {
-    fontSize: '2rem',
-    color: 'rgba(255,255,255,0.55)',
-    fontVariantNumeric: 'tabular-nums',
-    letterSpacing: '0.04em',
   },
   button: {
     width: '100px',
