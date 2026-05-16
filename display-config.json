@@ -1,0 +1,67 @@
+{
+  "layout": {
+    "columns": [
+      {
+        "width": "20%",
+        "direction": "column",
+        "items": [
+          { "type": "text", "oscAddress": "/CurrentSongName", "label": "Song", "fontSize": "2.5rem" },
+          {
+            "type": "switch",
+            "oscAddress": "/GlobalRackspace/upBtn/SetValue",
+            "label": "Columbus",
+            "color": "#6688cc"
+          },
+          {
+            "type": "switch",
+            "oscAddress": "/GlobalRackspace/downBtn/SetValue",
+            "label": "DOWN",
+            "color": "#55aa55"
+          }
+        ]
+      },
+      {
+        "width": "20%",
+        "direction": "column",
+        "items": [
+          { "type": "text", "oscAddress": "/Keys1LocalLabel", "label": "Keys 1", "fontSize": "1.2rem" },
+          { "type": "fader", "oscAddress": "/GlobalRackspace/k1vol/SetValue", "label": "K1", "color": "#4a7ab5" }
+        ]
+      },
+      {
+        "width": "20%",
+        "direction": "column",
+        "items": [
+          { "type": "text", "oscAddress": "/Keys2LocalLabel", "label": "Keys 2", "fontSize": "1.2rem" },
+          { "type": "fader", "oscAddress": "/GlobalRackspace/k2vol/SetValue", "label": "K2", "color": "#9b3030" }
+        ]
+      },
+      {
+        "width": "20%",
+        "direction": "column",
+        "items": [
+          { "type": "text", "staticValue": "Main", "label": "Main", "fontSize": "1.2rem" },
+          { "type": "fader", "oscAddress": "/GlobalRackspace/mainvol/SetValue", "label": "Main", "color": "#6a6a6a" }
+        ]
+      },
+      {
+        "width": "20%",
+        "direction": "column",
+        "items": [
+          {
+            "type": "button",
+            "oscAddress": "/GlobalRackspace/ohShit/SetValue",
+            "label": "Oh Shit",
+            "note": "Oh shit button",
+            "color": "#cc2222"
+          }
+        ]
+      }
+    ]
+  },
+  "theme": {
+    "background": "#626262",
+    "foreground": "#e8e8e8",
+    "accent": "#ff4444"
+  }
+}
