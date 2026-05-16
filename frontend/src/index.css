@@ -1,0 +1,44 @@
+:root {
+  --gp-bg: #0a0a0a;
+  --gp-fg: #e0e0e0;
+  --gp-accent: #ff4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 1920px;
+  height: 480px;
+  overflow: hidden;
+  background: var(--gp-bg);
+  color: var(--gp-fg);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+html {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+.disconnected-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: #ff0000;
+  z-index: 100;
+}
+
+.dimmed {
+  opacity: 0.4;
+}

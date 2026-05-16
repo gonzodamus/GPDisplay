@@ -1,0 +1,43 @@
+{
+  "layout": {
+    "columns": [
+      {
+        "width": "25%",
+        "direction": "column",
+        "items": [
+          { "type": "text", "oscAddress": "/GlobalRackspace/SetlistNameName", "label": "Setlist", "fontSize": "1.2rem" },
+          { "type": "text", "oscAddress": "/CurrentSongName", "label": "Song", "fontSize": "2.5rem" }
+        ]
+      },
+      {
+        "width": "25%",
+        "direction": "column",
+        "items": [
+          { "type": "text", "oscAddress": "/Keys1LocalLabel", "label": "Keys 1", "fontSize": "1.4rem" },
+          { "type": "fader", "oscAddress": "/GlobalRackspace/k1vol/SetValue", "label": "K1" }
+        ]
+      },
+      {
+        "width": "25%",
+        "direction": "column",
+        "items": [
+          { "type": "text", "oscAddress": "/Keys2LocalLabel", "label": "Keys 2", "fontSize": "1.4rem" },
+          { "type": "fader", "oscAddress": "/GlobalRackspace/k2vol/SetValue", "label": "K2" }
+        ]
+      },
+      {
+        "width": "25%",
+        "direction": "column",
+        "items": [
+          { "type": "text", "staticValue": "Main", "label": "Main", "fontSize": "1.4rem" },
+          { "type": "fader", "oscAddress": "/GlobalRackspace/mainvol/SetValue", "label": "Main" }
+        ]
+      }
+    ]
+  },
+  "theme": {
+    "background": "#0a0a0a",
+    "foreground": "#e0e0e0",
+    "accent": "#ff4444"
+  }
+}
