@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Frontend build output — run npm start to rebuild
+frontend/dist/
+
+# Runtime OSC state cache — machine-specific, generated on first use
+.osc-cache.json
+
+# Environment config — copy .env and adjust if defaults need changing
+.env
+
+# macOS
+.DS_Store
