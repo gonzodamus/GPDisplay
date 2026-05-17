@@ -1,15 +1,10 @@
 :root {
-  --gp-bg: #626262;
-  --gp-fg: #e8e8e8;
-  --gp-accent: #ff4444;
-  --gp-board: #626262;
-  --gp-track: #1e1e1e;
-  --gp-tape-bg: #c8b870;
-  --gp-tape-text: #1a1a1a;
-  --gp-label-box-bg: #2e2e2e;
+  --gp-bg: #1a1718;
+  --gp-fg: #e8ebf0;
+  --gp-accent: #c01525;
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -21,24 +16,9 @@ body,
   width: 1920px;
   height: 480px;
   overflow: hidden;
-  color: var(--gp-fg);
-  font-family: system-ui, -apple-system, sans-serif;
-  background-color: var(--gp-board);
-  background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      rgba(0, 0, 0, 0.06) 3px,
-      rgba(0, 0, 0, 0.06) 4px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 3px,
-      rgba(0, 0, 0, 0.04) 3px,
-      rgba(0, 0, 0, 0.04) 4px
-    );
+  background: #1a1718;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 html {
@@ -47,18 +27,4 @@ html {
 
 html::-webkit-scrollbar {
   display: none;
-}
-
-.disconnected-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6px;
-  background: #ff0000;
-  z-index: 100;
-}
-
-.dimmed {
-  opacity: 0.4;
 }
