@@ -7,7 +7,7 @@ function timeAgo(ts) {
   return `${Math.floor(s / 3600)}h`
 }
 
-function dotColor(ts) {
+function ageColor(ts) {
   if (!ts) return 'rgba(255,255,255,0.2)'
   const s = (Date.now() - ts) / 1000
   if (s < 10) return '#44dd44'
@@ -15,29 +15,6 @@ function dotColor(ts) {
   return '#ff4444'
 }
 
-// Compact indicator — always visible in bottom-right corner
-export function OscIndicator({ lastSeen }) {
-  const [, tick] = useState(0)
-
-  useEffect(() => {
-    const id = setInterval(() => tick(n => n + 1), 1000)
-    return () => clearInterval(id)
-  }, [])
-
-  const times = Object.values(lastSeen)
-  const lastTime = times.length ? Math.max(...times) : null
-
-  return (
-    <div style={styles.indicator}>
-      <span style={{ ...styles.dot, background: dotColor(lastTime) }} />
-      <span style={styles.indicatorText}>
-        {lastTime ? `osc ${timeAgo(lastTime)}` : 'no osc'}
-      </span>
-    </div>
-  )
-}
-
-// Full overlay — toggled by backtick
 export default function DebugOverlay({ lastSeen, oscState }) {
   const [, tick] = useState(0)
 
@@ -48,11 +25,7 @@ export default function DebugOverlay({ lastSeen, oscState }) {
 
   const entries = Object.keys(lastSeen)
     .sort()
-    .map(addr => ({
-      addr,
-      value: oscState[addr],
-      ts: lastSeen[addr],
-    }))
+    .map(addr => ({ addr, value: oscState[addr], ts: lastSeen[addr] }))
 
   return (
     <div style={styles.overlay}>
@@ -70,7 +43,7 @@ export default function DebugOverlay({ lastSeen, oscState }) {
             <tr key={addr}>
               <td style={styles.tdAddr}>{addr}</td>
               <td style={styles.tdVal}>{String(value ?? '—')}</td>
-              <td style={{ ...styles.tdAge, color: dotColor(ts) }}>{timeAgo(ts)}</td>
+              <td style={{ ...styles.tdAge, color: ageColor(ts) }}>{timeAgo(ts)}</td>
             </tr>
           ))}
         </tbody>
@@ -80,27 +53,6 @@ export default function DebugOverlay({ lastSeen, oscState }) {
 }
 
 const styles = {
-  indicator: {
-    position: 'absolute',
-    bottom: '8px',
-    right: '12px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '5px',
-    pointerEvents: 'none',
-  },
-  dot: {
-    width: '8px',
-    height: '8px',
-    borderRadius: '50%',
-    flexShrink: 0,
-  },
-  indicatorText: {
-    fontSize: '0.7rem',
-    color: 'rgba(255,255,255,0.35)',
-    fontVariantNumeric: 'tabular-nums',
-    letterSpacing: '0.04em',
-  },
   overlay: {
     position: 'absolute',
     inset: 0,

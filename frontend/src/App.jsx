@@ -3,7 +3,7 @@ import { loadConfig } from './config.js'
 import useOSC from './hooks/useOSC.js'
 import WidgetContainer from './components/WidgetContainer.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
-import DebugOverlay, { OscIndicator } from './components/DebugOverlay.jsx'
+import DebugOverlay from './components/DebugOverlay.jsx'
 
 export default function App() {
   const [config, setConfig] = useState(null)
@@ -74,7 +74,6 @@ export default function App() {
         })}
       </div>
 
-      <OscIndicator lastSeen={lastSeen} />
       {debugOpen && <DebugOverlay lastSeen={lastSeen} oscState={oscState} />}
     </div>
   )
