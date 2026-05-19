@@ -166,6 +166,16 @@ wss.on('connection', (ws) => {
   });
 });
 
+// Watch config file and notify clients when it changes
+let reloadTimer = null
+fs.watch(configPath, () => {
+  clearTimeout(reloadTimer)
+  reloadTimer = setTimeout(() => {
+    console.log('Config changed — notifying clients to reload')
+    broadcast(JSON.stringify({ type: 'config-reload' }))
+  }, 200)
+})
+
 // Open OSC socket
 osc.open();
 console.log(`OSC listening for GP messages on UDP port ${GP_OSC_SEND_PORT}`);

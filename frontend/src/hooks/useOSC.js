@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 
 export default function useOSC() {
   const [oscState, setOscState] = useState({})
+  const [lastSeen, setLastSeen] = useState({})
   const [connected, setConnected] = useState(false)
   const wsRef = useRef(null)
   const reconnectTimerRef = useRef(null)
@@ -18,7 +19,15 @@ export default function useOSC() {
 
       ws.onmessage = (event) => {
         try {
-          const { address, args } = JSON.parse(event.data)
+          const msg = JSON.parse(event.data)
+
+          if (msg.type === 'config-reload') {
+            window.location.reload()
+            return
+          }
+
+          const { address, args } = msg
+
           if (address === '/ClearAll') {
             setOscState((prev) => {
               const preserved = {}
@@ -29,6 +38,9 @@ export default function useOSC() {
             })
             return
           }
+
+          const now = Date.now()
+          setLastSeen((prev) => ({ ...prev, [address]: now }))
           setOscState((prev) => ({ ...prev, [address]: args[0] }))
         } catch (err) {
           console.error('useOSC: failed to parse message', err)
@@ -56,5 +68,5 @@ export default function useOSC() {
     }
   }, [])
 
-  return { oscState, connected }
+  return { oscState, lastSeen, connected }
 }

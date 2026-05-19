@@ -2,13 +2,24 @@ import { useState, useEffect } from 'react'
 import { loadConfig } from './config.js'
 import useOSC from './hooks/useOSC.js'
 import WidgetContainer from './components/WidgetContainer.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
+import DebugOverlay, { OscIndicator } from './components/DebugOverlay.jsx'
 
 export default function App() {
   const [config, setConfig] = useState(null)
-  const { oscState, connected } = useOSC()
+  const [debugOpen, setDebugOpen] = useState(false)
+  const { oscState, lastSeen, connected } = useOSC()
 
   useEffect(() => {
     loadConfig().then(setConfig)
+  }, [])
+
+  useEffect(() => {
+    function onKey(e) {
+      if (e.code === 'Backquote') setDebugOpen(open => !open)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
   }, [])
 
   if (!config) {
@@ -30,7 +41,8 @@ export default function App() {
       >
         {columns.map((col, colIdx) => {
           const direction = col.direction || 'row'
-          const hasFader = col.items.some(item => item.type === 'fader')
+          const items = col.items || []
+          const hasFader = items.some(item => item.type === 'fader')
           return (
             <div
               key={colIdx}
@@ -45,21 +57,25 @@ export default function App() {
                 paddingLeft: col.paddingLeft || 0,
               }}
             >
-              {col.items.map((item, itemIdx) => (
-                <div
-                  key={itemIdx}
-                  style={{
-                    ...styles.itemWrapper,
-                    flex: direction === 'row' ? '1 1 0' : '0 0 auto',
-                  }}
-                >
-                  <WidgetContainer item={item} oscState={oscState} />
-                </div>
+              {items.map((item, itemIdx) => (
+                <ErrorBoundary key={itemIdx} name={item.oscAddress || item.type}>
+                  <div
+                    style={{
+                      ...styles.itemWrapper,
+                      flex: direction === 'row' ? '1 1 0' : '0 0 auto',
+                    }}
+                  >
+                    <WidgetContainer item={item} oscState={oscState} />
+                  </div>
+                </ErrorBoundary>
               ))}
             </div>
           )
         })}
       </div>
+
+      <OscIndicator lastSeen={lastSeen} />
+      {debugOpen && <DebugOverlay lastSeen={lastSeen} oscState={oscState} />}
     </div>
   )
 }
@@ -70,7 +86,6 @@ const styles = {
     width: '1920px',
     height: '480px',
     overflow: 'hidden',
-
   },
   loading: {
     display: 'flex',
