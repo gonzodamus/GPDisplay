@@ -9,25 +9,23 @@
 PORT=${HTTP_PORT:-3000}
 URL="http://localhost:${PORT}"
 
-# launchd strips PATH — add common node locations so npm/node are findable
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-[ -f "/opt/homebrew/bin/node" ] && export PATH="/opt/homebrew/bin:$PATH"
-[ -f "/usr/local/bin/node" ]    && export PATH="/usr/local/bin:$PATH"
+# ── Wait for server (started by com.gpdisplay.server launchd agent) ──────────
+# Do NOT start the server here — starting it in the background causes it to die
+# when this script exits (launchd kills the process group), which races with the
+# dedicated server plist and produces EADDRINUSE thrash.
 
-# ── Start server if not already running ──────────────────────────────────────
+echo "Waiting for server on port ${PORT}..."
+for i in {1..40}; do
+  curl -sf "${URL}/api/config" > /dev/null 2>&1 && break
+  echo "  ($i/40) not ready yet..."
+  sleep 0.5
+done
 
-if ! lsof -ti tcp:${PORT} > /dev/null 2>&1; then
-  echo "Starting bridge server..."
-  npm start --prefix "$(dirname "$0")" &
-  for i in {1..20}; do
-    sleep 0.5
-    curl -sf "${URL}/api/config" > /dev/null 2>&1 && break
-    echo "Waiting for server... ($i)"
-  done
-else
-  echo "Bridge server already running on port ${PORT}"
+if ! curl -sf "${URL}/api/config" > /dev/null 2>&1; then
+  echo "ERROR: server never came up on port ${PORT} — aborting Chrome launch"
+  exit 1
 fi
+echo "Server ready."
 
 # ── Determine display position ───────────────────────────────────────────────
 
@@ -47,28 +45,22 @@ DISPLAY_Y=${DISPLAY_Y:-0}
 
 # ── Open Chrome ──────────────────────────────────────────────────────────────
 
-CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-
 if [ "$SOLO" = true ]; then
   # Only one display: kiosk mode fills it completely, no OS chrome visible.
-  # Use the binary directly — `open -a` does not reliably pass --kiosk to an
-  # already-running Chrome instance, and launchd bypasses the shell environment
-  # that `open` expects.
+  # Use `open -na` so Chrome is launched through LaunchServices and escapes
+  # launchd's process group — running the binary directly causes Chrome to be
+  # SIGTERM'd when this script exits (launchd kills the whole process group).
   echo "Solo display — launching in kiosk mode"
-  if [ ! -f "$CHROME" ]; then
-    echo "ERROR: Chrome binary not found at: $CHROME"
-    exit 1
-  fi
   pkill -x "Google Chrome" 2>/dev/null || true
   sleep 1
-  echo "Launching Chrome binary..."
-  "$CHROME" \
+  echo "Launching Chrome via open..."
+  open -na "Google Chrome" --args \
     --kiosk \
     --no-first-run \
     --disable-session-crashed-bubble \
     --noerrdialogs \
-    "${URL}" &
-  echo "Chrome launched (PID $!)"
+    "${URL}"
+  echo "Chrome launch handed off to LaunchServices"
 else
   # Secondary display: open as app window at the right position,
   # then fullscreen it — macOS fullscreens on whichever display the window is on

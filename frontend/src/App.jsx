@@ -25,7 +25,7 @@ export default function App() {
   if (!config) {
     return (
       <div style={styles.loading}>
-        Could not load config — is the bridge server running?
+        Loading…
       </div>
     )
   }

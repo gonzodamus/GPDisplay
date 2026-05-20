@@ -75,6 +75,12 @@ function persistCache(cache) {
   }
 }
 
+let persistTimer = null;
+function schedulePersist() {
+  clearTimeout(persistTimer);
+  persistTimer = setTimeout(() => persistCache(oscCache), 100);
+}
+
 const oscCache = loadPersistedCache();
 console.log(`Loaded ${oscCache.size} cached OSC value(s) from disk`);
 
@@ -105,7 +111,7 @@ osc.on('*', (message) => {
     for (const addr of oscCache.keys()) {
       if (!addr.startsWith('/GlobalRackspace/')) oscCache.delete(addr);
     }
-    persistCache(oscCache);
+    schedulePersist();
     console.log('OSC received: /ClearAll — cache cleared (GlobalRackspace values preserved)');
     broadcast(JSON.stringify({ address: '/ClearAll', args: [] }));
     return;
@@ -115,7 +121,7 @@ osc.on('*', (message) => {
     args: message.args,
   });
   oscCache.set(message.address, payload);
-  persistCache(oscCache);
+  schedulePersist();
   console.log(`OSC received: ${message.address}`, message.args);
   const count = broadcast(payload);
   console.log(`Broadcast to ${count} WS client(s)`);
