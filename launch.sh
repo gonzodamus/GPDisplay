@@ -41,15 +41,22 @@ DISPLAY_Y=${DISPLAY_Y:-0}
 
 # ── Open Chrome ──────────────────────────────────────────────────────────────
 
+CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
 if [ "$SOLO" = true ]; then
-  # Only one display: kiosk mode fills it completely, no OS chrome visible
+  # Only one display: kiosk mode fills it completely, no OS chrome visible.
+  # Use the binary directly — `open -a` does not reliably pass --kiosk to an
+  # already-running Chrome instance, and launchd bypasses the shell environment
+  # that `open` expects.
   echo "Solo display — launching in kiosk mode"
-  open -a "Google Chrome" --args \
+  pkill -x "Google Chrome" 2>/dev/null || true
+  sleep 1
+  "$CHROME" \
     --kiosk \
-    "${URL}" \
     --no-first-run \
     --disable-session-crashed-bubble \
-    --noerrdialogs
+    --noerrdialogs \
+    "${URL}" &
 else
   # Secondary display: open as app window at the right position,
   # then fullscreen it — macOS fullscreens on whichever display the window is on
