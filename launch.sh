@@ -9,6 +9,12 @@
 PORT=${HTTP_PORT:-3000}
 URL="http://localhost:${PORT}"
 
+# launchd strips PATH — add common node locations so npm/node are findable
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+[ -f "/opt/homebrew/bin/node" ] && export PATH="/opt/homebrew/bin:$PATH"
+[ -f "/usr/local/bin/node" ]    && export PATH="/usr/local/bin:$PATH"
+
 # ── Start server if not already running ──────────────────────────────────────
 
 if ! lsof -ti tcp:${PORT} > /dev/null 2>&1; then
@@ -49,14 +55,20 @@ if [ "$SOLO" = true ]; then
   # already-running Chrome instance, and launchd bypasses the shell environment
   # that `open` expects.
   echo "Solo display — launching in kiosk mode"
+  if [ ! -f "$CHROME" ]; then
+    echo "ERROR: Chrome binary not found at: $CHROME"
+    exit 1
+  fi
   pkill -x "Google Chrome" 2>/dev/null || true
   sleep 1
+  echo "Launching Chrome binary..."
   "$CHROME" \
     --kiosk \
     --no-first-run \
     --disable-session-crashed-bubble \
     --noerrdialogs \
     "${URL}" &
+  echo "Chrome launched (PID $!)"
 else
   # Secondary display: open as app window at the right position,
   # then fullscreen it — macOS fullscreens on whichever display the window is on
