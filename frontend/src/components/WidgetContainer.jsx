@@ -8,7 +8,7 @@ export default function WidgetContainer({ item, oscState }) {
 
   const value = staticValue !== undefined ? staticValue : oscState[oscAddress];
 
-  if (hideIfValue !== undefined && value === hideIfValue) return null;
+  if (hideIfValue !== undefined && (value === hideIfValue || value === undefined || value === null)) return null;
 
   let label = itemLabel;
   if (oscAddress && oscAddress.endsWith('/SetValue')) {

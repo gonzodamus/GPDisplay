@@ -9,7 +9,7 @@
         "items": [
           { "type": "text", "oscAddress": "/CurrentSongName", "label": "Song", "fontSize": "5.5rem" },
           { "type": "text", "oscAddress": "/SelectedSongPartName", "label": "Part", "fontSize": "3.5rem", "hideIfValue": "Song" },
-          { "type": "text", "oscAddress": "/GlobalRackspace/SetlistNameName", "label": "Setlist", "fontSize": "2.5rem" }
+          { "type": "text", "oscAddress": "/GlobalRackspace/SetlistNameName", "label": "Setlist", "fontSize": "2.5rem", "pushToBottom": true }
         ]
       },
       {

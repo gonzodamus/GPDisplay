@@ -63,6 +63,7 @@ export default function App() {
                     style={{
                       ...styles.itemWrapper,
                       flex: direction === 'row' ? '1 1 0' : '0 0 auto',
+                      marginTop: item.pushToBottom ? 'auto' : undefined,
                     }}
                   >
                     <WidgetContainer item={item} oscState={oscState} />
