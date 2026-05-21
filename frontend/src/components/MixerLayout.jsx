@@ -70,8 +70,8 @@ export default function MixerLayout({ oscState, connected }) {
   const k2Val = oscState['/GlobalRackspace/k2vol/SetValue'];
   const mainVal = oscState['/GlobalRackspace/mainvol/SetValue'];
 
-  const k1Label = resolveLabel(oscState, '/GlobalRackspace/k1vol/SetValue', 'K1');
-  const k2Label = resolveLabel(oscState, '/GlobalRackspace/k2vol/SetValue', 'K2');
+  const k1Label = oscState['/Keys1LocalLabel'] || resolveLabel(oscState, '/GlobalRackspace/k1vol/SetValue', 'K1');
+  const k2Label = oscState['/Keys2LocalLabel'] || resolveLabel(oscState, '/GlobalRackspace/k2vol/SetValue', 'K2');
 
   const ohShitVal = oscState['/GlobalRackspace/ohshit/SetValue'];
   const isTriggered = ohShitVal !== undefined && ohShitVal !== null && ohShitVal >= 0.5;
@@ -104,13 +104,15 @@ export default function MixerLayout({ oscState, connected }) {
       <div style={{ ...styles.grid, opacity: connected ? 1 : 0.4 }}>
         {/* Left: Now Playing */}
         <section style={styles.nowPlaying}>
-          <h1 style={{
-            ...styles.songTitle,
-            fontSize: songTitle.length > 18 ? 86 : songTitle.length > 12 ? 108 : 132,
-          }}>{songTitle}</h1>
-          {songPart && songPart.trim() && songPart !== 'Song' && (
-            <div style={styles.songPart}>{songPart}</div>
-          )}
+          <div style={styles.titleBlock}>
+            <h1 style={{
+              ...styles.songTitle,
+              fontSize: songTitle.length > 18 ? 90 : songTitle.length > 12 ? 113 : 139,
+            }}>{songTitle}</h1>
+            {songPart && songPart.trim() && songPart !== 'Song' && (
+              <div style={styles.songPart}>{songPart}</div>
+            )}
+          </div>
           <div style={styles.metaRow}>
             <span style={styles.pill}>
               <span style={styles.pillLabel}>Setlist</span>
@@ -253,14 +255,18 @@ const styles = {
 
   // Left column
   nowPlaying: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    position: 'relative',
     minWidth: 0,
+  },
+  titleBlock: {
+    position: 'absolute',
+    top: 60,
+    left: 0,
+    right: 0,
   },
   songTitle: {
     fontFamily: "'Bebas Neue', sans-serif",
-    fontSize: 132,
+    fontSize: 139,
     lineHeight: 0.86,
     letterSpacing: '0.005em',
     margin: 0,
@@ -270,7 +276,7 @@ const styles = {
   },
   songPart: {
     fontFamily: "'Bebas Neue', sans-serif",
-    fontSize: 64,
+    fontSize: 77,
     lineHeight: 1,
     letterSpacing: '0.08em',
     textTransform: 'uppercase',
@@ -279,10 +285,13 @@ const styles = {
     textShadow: '0 1px 0 rgba(0,0,0,0.7)',
   },
   metaRow: {
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
     display: 'flex',
     gap: 10,
     alignItems: 'center',
-    marginTop: 18,
   },
   pill: {
     display: 'inline-flex',
@@ -292,7 +301,7 @@ const styles = {
     border: '1px solid rgba(220,180,140,0.18)',
     borderRadius: 999,
     background: 'rgba(40,28,20,0.35)',
-    fontSize: 12,
+    fontSize: 14,
     letterSpacing: '0.2em',
     textTransform: 'uppercase',
     color: 'rgba(232,235,240,0.62)',
@@ -330,7 +339,7 @@ const styles = {
     padding: '4px 0',
   },
   chName: {
-    fontSize: 14,
+    fontSize: 17,
     letterSpacing: '0.22em',
     textTransform: 'uppercase',
     color: 'rgba(232,235,240,0.62)',
@@ -419,7 +428,7 @@ const styles = {
   killText: {
     position: 'relative',
     fontFamily: "'Bebas Neue', sans-serif",
-    fontSize: 38,
+    fontSize: 46,
     letterSpacing: '0.18em',
     transition: 'color 200ms ease, text-shadow 200ms ease',
   },
