@@ -63,7 +63,7 @@ function PanelRivets() {
 
 export default function MixerLayout({ oscState, connected }) {
   const songTitle = oscState['/CurrentSongName'] ?? 'Predecessor';
-  const songPart = oscState['/SongPartName'] ?? null;
+  const songPart = oscState['/SelectedSongPartName'] ?? null;
   const setlistName = oscState['/GlobalRackspace/SetlistNameName'] ?? 'Token';
 
   const k1Val = oscState['/GlobalRackspace/k1vol/SetValue'];
@@ -108,7 +108,7 @@ export default function MixerLayout({ oscState, connected }) {
             ...styles.songTitle,
             fontSize: songTitle.length > 18 ? 86 : songTitle.length > 12 ? 108 : 132,
           }}>{songTitle}</h1>
-          {songPart && songPart.trim() && (
+          {songPart && songPart.trim() && songPart !== 'Song' && (
             <div style={styles.songPart}>{songPart}</div>
           )}
           <div style={styles.metaRow}>

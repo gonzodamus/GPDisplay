@@ -4,14 +4,16 @@ import TextWidget from './TextWidget.jsx';
 import ButtonWidget from './ButtonWidget.jsx';
 
 export default function WidgetContainer({ item, oscState }) {
-  const { type, oscAddress, label: itemLabel, fontSize, color, staticValue, note } = item;
+  const { type, oscAddress, label: itemLabel, fontSize, color, staticValue, note, hideIfValue } = item;
 
   const value = staticValue !== undefined ? staticValue : oscState[oscAddress];
+
+  if (hideIfValue !== undefined && (value === hideIfValue || value === undefined || value === null)) return null;
 
   let label = itemLabel;
   if (oscAddress && oscAddress.endsWith('/SetValue')) {
     const captionAddress = oscAddress.replace('/SetValue', '/SetCaption');
-    const nameAddress = oscAddress.replace('/SetValue', 'Name');
+    const nameAddress = oscAddress.replace('/SetValue', '/Name');
     const caption = oscState[captionAddress] ?? oscState[nameAddress];
     if (caption !== undefined && caption !== null) {
       label = caption;

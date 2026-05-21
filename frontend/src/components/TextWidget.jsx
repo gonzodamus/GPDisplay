@@ -1,4 +1,4 @@
-export default function TextWidget({ value, label, fontSize = '2rem' }) {
+export default function TextWidget({ value, fontSize = '2rem' }) {
   const displayValue = value === undefined || value === null ? '—' : value;
 
   // fontSize >= 1.5rem → dark box display (song title, setlist name)
