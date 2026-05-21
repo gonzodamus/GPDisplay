@@ -1,16 +1,31 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import useOSC from './hooks/useOSC.js'
 import MixerLayout from './components/MixerLayout.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
+import DebugOverlay from './components/DebugOverlay.jsx'
 
 export default function App() {
-  const { oscState, connected } = useOSC()
+  const [debugOpen, setDebugOpen] = useState(false)
+  const { oscState, lastSeen, connected } = useOSC()
 
   useEffect(() => {
-    // Force theme CSS vars for body background consistency
     document.documentElement.style.setProperty('--gp-bg', '#1a1718')
     document.documentElement.style.setProperty('--gp-fg', '#e8ebf0')
     document.documentElement.style.setProperty('--gp-accent', '#c01525')
   }, [])
 
-  return <MixerLayout oscState={oscState} connected={connected} />
+  useEffect(() => {
+    function onKey(e) {
+      if (e.code === 'Backquote') setDebugOpen(open => !open)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  return (
+    <ErrorBoundary name="app">
+      <MixerLayout oscState={oscState} connected={connected} />
+      {debugOpen && <DebugOverlay lastSeen={lastSeen} oscState={oscState} />}
+    </ErrorBoundary>
+  )
 }

@@ -63,6 +63,7 @@ function PanelRivets() {
 
 export default function MixerLayout({ oscState, connected }) {
   const songTitle = oscState['/CurrentSongName'] ?? 'Predecessor';
+  const songPart = oscState['/SongPartName'] ?? null;
   const setlistName = oscState['/GlobalRackspace/SetlistNameName'] ?? 'Token';
 
   const k1Val = oscState['/GlobalRackspace/k1vol/SetValue'];
@@ -103,7 +104,13 @@ export default function MixerLayout({ oscState, connected }) {
       <div style={{ ...styles.grid, opacity: connected ? 1 : 0.4 }}>
         {/* Left: Now Playing */}
         <section style={styles.nowPlaying}>
-          <h1 style={styles.songTitle}>{songTitle}</h1>
+          <h1 style={{
+            ...styles.songTitle,
+            fontSize: songTitle.length > 18 ? 86 : songTitle.length > 12 ? 108 : 132,
+          }}>{songTitle}</h1>
+          {songPart && songPart.trim() && (
+            <div style={styles.songPart}>{songPart}</div>
+          )}
           <div style={styles.metaRow}>
             <span style={styles.pill}>
               <span style={styles.pillLabel}>Setlist</span>
@@ -260,6 +267,16 @@ const styles = {
     color: '#d9d3c8',
     textShadow: '0 1px 0 rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.6)',
     wordBreak: 'break-word',
+  },
+  songPart: {
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: 64,
+    lineHeight: 1,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    margin: '10px 0 0',
+    color: '#a89a82',
+    textShadow: '0 1px 0 rgba(0,0,0,0.7)',
   },
   metaRow: {
     display: 'flex',

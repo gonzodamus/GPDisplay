@@ -10,5 +10,8 @@ frontend/dist/
 # Environment config — copy .env and adjust if defaults need changing
 .env
 
+# Logs — generated at runtime
+logs/*.log
+
 # macOS
 .DS_Store
