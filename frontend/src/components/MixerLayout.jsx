@@ -301,7 +301,7 @@ const styles = {
     border: '1px solid rgba(220,180,140,0.18)',
     borderRadius: 999,
     background: 'rgba(40,28,20,0.35)',
-    fontSize: 14,
+    fontSize: 17.5,
     letterSpacing: '0.2em',
     textTransform: 'uppercase',
     color: 'rgba(232,235,240,0.62)',
