@@ -65,28 +65,17 @@ Bottom-right dot: green (<10s), amber (10–60s), red (>60s).
 
 ---
 
-## Config reference (`display-config.json`)
+## Layout
 
-Changes auto-reload in connected browsers.
+The display is hardcoded in `frontend/src/components/MixerLayout.jsx` — edit it directly, then `npm run build` (dev mode hot-reloads).
 
-**Column fields:** `width`, `direction` (`"row"`/`"column"`), `paddingTop`, `paddingLeft`
+To add a widget: render it in `MixerLayout.jsx` from `oscState['/GlobalRackspace/<handle>/SetValue']`, add the matching `GetValue` address to `getValueQueries` in `server/index.js`, and add a `SendOSCMessage` line to the GPScript sync handler.
 
-**Item fields:**
-
-| Field | Notes |
-|---|---|
-| `type` | `fader`, `button`, `switch`, `text` |
-| `oscAddress` | e.g. `/GlobalRackspace/k1vol/SetValue` |
-| `staticValue` | hardcoded value instead of OSC |
-| `label` | fallback until OSC arrives |
-| `color` | accent colour for fader/button/switch |
-| `fontSize` | text only — ≥1.5rem = name box, <1.5rem = tape banner |
-| `note` | button only — secondary label below the button |
-
-**Ports:**
+**Env vars (`.env`):**
 
 | Env var | Default | Purpose |
 |---|---|---|
 | `GP_OSC_SEND_PORT` | `8000` | Bridge listens for GP here |
 | `GP_OSC_LISTEN_PORT` | `54344` | Bridge sends `/Refresh` here |
 | `HTTP_PORT` | `3000` | HTTP + WebSocket |
+| `LOG_OSC` | `0` | `1` = log every OSC message (debugging) |

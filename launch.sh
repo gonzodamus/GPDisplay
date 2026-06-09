@@ -27,12 +27,12 @@ FBV_URL="http://localhost:${FBV_PORT}/"
 
 echo "Waiting for server on port ${PORT}..."
 for i in {1..40}; do
-  curl -sf "${URL}/api/config" > /dev/null 2>&1 && break
+  curl -sf "${URL}/" > /dev/null 2>&1 && break
   echo "  ($i/40) not ready yet..."
   sleep 0.5
 done
 
-if ! curl -sf "${URL}/api/config" > /dev/null 2>&1; then
+if ! curl -sf "${URL}/" > /dev/null 2>&1; then
   echo "ERROR: server never came up on port ${PORT} — aborting Chrome launch"
   exit 1
 fi

@@ -11,43 +11,25 @@ const OSC = require('osc-js');
 const GP_OSC_SEND_PORT = parseInt(process.env.GP_OSC_SEND_PORT || '8000', 10);
 const GP_OSC_LISTEN_PORT = parseInt(process.env.GP_OSC_LISTEN_PORT || '54344', 10);
 const HTTP_PORT = parseInt(process.env.HTTP_PORT || '3000', 10);
+const LOG_OSC = process.env.LOG_OSC === '1';
 
 // Paths
 const staticPath = path.join(__dirname, '..', 'frontend', 'dist');
-const configPath = path.join(__dirname, '..', 'display-config.json');
 
-// Read config at startup and extract GlobalRackspace widget GetValue addresses.
-// GP doesn't send these in /Refresh — we have to query them individually.
-function loadGetValueQueries() {
-  try {
-    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-    const queries = [];
-    for (const col of config.layout.columns) {
-      for (const item of (col.items || [])) {
-        if (item.oscAddress &&
-            item.oscAddress.startsWith('/GlobalRackspace/') &&
-            item.oscAddress.endsWith('/SetValue')) {
-          queries.push(item.oscAddress.replace('/SetValue', '/GetValue'));
-        }
-      }
-    }
-    return queries;
-  } catch (err) {
-    console.warn('Could not parse config for GetValue queries:', err.message);
-    return [];
-  }
-}
-
-const getValueQueries = loadGetValueQueries();
-console.log(`Will query ${getValueQueries.length} GlobalRackspace widget(s) on connect:`, getValueQueries);
+// GlobalRackspace widgets shown in MixerLayout.jsx. GP doesn't send these in
+// /Refresh, so we query each one when a browser connects. When adding a widget
+// to MixerLayout, add its GetValue address here too (and a SendOSCMessage line
+// in the Global Rackspace GPScript sync handler — see README).
+const getValueQueries = [
+  '/GlobalRackspace/k1vol/GetValue',
+  '/GlobalRackspace/k2vol/GetValue',
+  '/GlobalRackspace/mainvol/GetValue',
+  '/GlobalRackspace/ohshit/GetValue',
+];
 
 // Set up Express
 const app = express();
 app.use(express.static(staticPath));
-
-app.get('/api/config', (req, res) => {
-  res.sendFile(configPath);
-});
 
 // Create HTTP server from Express app
 const httpServer = createServer(app);
@@ -75,11 +57,25 @@ function persistCache(cache) {
   }
 }
 
+// The cache file is only read at server startup, so a 1s debounce just means
+// restored values can be up to 1s stale after a crash — corrected on reconnect.
 let persistTimer = null;
 function schedulePersist() {
-  clearTimeout(persistTimer);
-  persistTimer = setTimeout(() => persistCache(oscCache), 100);
+  if (persistTimer) return;
+  persistTimer = setTimeout(() => {
+    persistTimer = null;
+    persistCache(oscCache);
+  }, 1000);
 }
+
+// Flush pending cache writes on shutdown
+function shutdown() {
+  clearTimeout(persistTimer);
+  persistCache(oscCache);
+  process.exit(0);
+}
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
 
 const oscCache = loadPersistedCache();
 console.log(`Loaded ${oscCache.size} cached OSC value(s) from disk`);
@@ -122,9 +118,8 @@ osc.on('*', (message) => {
   });
   oscCache.set(message.address, payload);
   schedulePersist();
-  console.log(`OSC received: ${message.address}`, message.args);
   const count = broadcast(payload);
-  console.log(`Broadcast to ${count} WS client(s)`);
+  if (LOG_OSC) console.log(`OSC received: ${message.address}`, message.args, `→ ${count} WS client(s)`);
 });
 
 // Send /Refresh to Gig Performer (handles system-level state)
@@ -172,16 +167,6 @@ wss.on('connection', (ws) => {
   });
 });
 
-// Watch config file and notify clients when it changes
-let reloadTimer = null
-fs.watch(configPath, () => {
-  clearTimeout(reloadTimer)
-  reloadTimer = setTimeout(() => {
-    console.log('Config changed — notifying clients to reload')
-    broadcast(JSON.stringify({ type: 'config-reload' }))
-  }, 200)
-})
-
 // Open OSC socket
 osc.open();
 console.log(`OSC listening for GP messages on UDP port ${GP_OSC_SEND_PORT}`);
@@ -189,6 +174,4 @@ console.log(`OSC listening for GP messages on UDP port ${GP_OSC_SEND_PORT}`);
 // Start HTTP + WS server
 httpServer.listen(HTTP_PORT, () => {
   console.log(`HTTP + WS server listening on port ${HTTP_PORT}`);
-  console.log(`Static files served from: ${staticPath}`);
-  console.log(`Config file: ${configPath}`);
-});
+  console.log(`Static files served from: ${staticPath}`);});

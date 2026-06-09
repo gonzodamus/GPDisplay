@@ -37,11 +37,6 @@ export default function useOSC() {
         try {
           const msg = JSON.parse(event.data)
 
-          if (msg.type === 'config-reload') {
-            window.location.reload()
-            return
-          }
-
           const { address, args } = msg
 
           if (address === '/ClearAll') {
